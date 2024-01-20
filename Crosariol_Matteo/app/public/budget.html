@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bilancio familiare</title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="assets/js/budget_app.js" defer></script>
+
+                   <!-- Bootstrap -->
+                   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="assets/css/style.css"/>
+    </head>
+    <body>
+        <div id="app">
+
+            <div id="budget_app" v-if="budget_page">
+                <button type="button" @click="balance_page=true;budget_page=false;">Balance</button>
+                <button type="button" @click="whoami_page=true;budget_page=false;">Who am I</button>
+
+                <h1>BUDGET</h1>
+                <div id="insert" v-if="!verified">
+                    <div class="budget_insert">
+                        <div class="budget_insert_form">
+                            <form id="budget_form" action="/api/app/budget" method="post">
+                                <div class="form-group">
+                                    <label for="id">Id:</label>
+                                    <input type="number" name="id" id="id" v-model="id" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="day">Day:</label>
+                                    <input type="number" name="day" id="day" v-model="day"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="month">Month:</label>
+                                    <input type="number" name="month" id="month" v-model="month"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year">Year:</label>
+                                    <input type="number" name="year" id="year" v-model="year"/>
+                                </div>     
+                                <div class="form-group">
+                                    <label for="description">Description:</label>
+                                    <input type="text" name="description" id="description" v-model="description"/>
+                                </div>      
+                                <div class="form-group">
+                                    <label for="category">Category:</label>
+                                    <input type="text" name="category" id="category" v-model="category"/>
+                                </div>    
+                                <div class="form-group">
+                                    <label for="total_cost">Total Cost:</label>
+                                    <input type="number" name="total_cost" id="total_cost" v-model="total_cost"/>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="users">Users:</label>
+                                    <input type="text" name="users" id="users" v-model="users"/>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="shares">Shares:</label>
+                                    <input type="text" name="shares" id="shares" v-model="shares"/>
+                                </div> 
+                                        
+                                <input id="create" type="submit" value="Submit" @click.prevent="addBudget()"/>
+                    
+                            </form>
+                        </div>
+
+                        <div class="user_list">
+                            <form id="search_user">
+                                <label for="text">Search:</label>
+                                <input type="text" id="text" name="user_search" v-model="user_search">
+                        
+                                <button type="button" @click="searchUser_bytext(user_search);search_user_filter=true;">Search</button>
+                                <button type="button" @click="search_user_filter=false">Cancel</button>
+                            </form>
+                            <table id="userlist">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                </tr>
+                                <tr v-for="user in show_users" v-if="!search_user_filter">
+                                    <td> {{user.username}} </td>
+                                    <td> {{user.name}} </td>
+                                    <td> {{user.surname}} </td>
+                                </tr>
+                                <tr v-for="user in users_to_search" v-if="search_user_filter">
+                                    <td> {{user.username}} </td>
+                                    <td> {{user.name}} </td>
+                                    <td> {{user.surname}} </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div id="filter">
+                        Filter for:
+                        <button type="submit" @click="search_by_time=true; search_by_text=false">Year and month</button>
+                        <button type="submit" @click="search_by_text=true;search_by_time=false">Text</button>
+
+                        <div id="filter_time">
+                            <form id="search_time" v-if="search_by_time && !search_by_text">
+                                <label for="month">Month:</label>
+                                <input type="number" id="month" name="month" v-model="month_search">
+                        
+                                <label for="year">Year:</label>
+                                <input type="number" id="year" name="year" v-model="year_search">
+                        
+                                <button type="button" @click="search_filter=true;searchBudget_bytime(year_search,month_search);">Search</button>
+                                <button type="button" @click="search_filter=false">Cancel</button>
+                            </form>
+                        </div>
+
+                        <div id="filter_text">
+                            <form id="search_text" v-if="search_by_text  && !search_by_time">
+                                <label for="text">Text:</label>
+                                <input type="text" id="text" name="text_search" v-model="text_search">
+                        
+                                <button type="button" @click="searchBudget_bytext(text_search);search_filter=true;">Search</button>
+                                <button type="button" @click="search_filter=false">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <table id="budgetlist">
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Total Cost</th>
+                            <th>Users</th>
+                            <th>Shares</th>
+                        </tr>
+                        <tr v-for="budget in budgets" v-if="!search_filter">
+                            <td> {{budget.id}} </td>
+                            <td> {{budget.username}} </td>
+                            <td> {{budget.day}}/{{budget.month}}/{{budget.year}} </td>
+                            <td> {{budget.description}} </td>
+                            <td> {{budget.category}} </td>
+                            <td> {{budget.total_cost}} </td>
+                            <td> {{budget.users}} </td>
+                            <td> {{budget.shares}} </td>
+                            <td> <button type="button" @click="getBudgetModify(budget.year,budget.month,budget.id);verified=true;verified2=true">Show</button> </td>
+                            <td> <button type="button" @click="removeBudget(budget.year,budget.month,budget.id)">Delete</button> </td>
+                            <td> <button type="button" @click.prevent="verified=true;id_old=budget.id;getBudgetModify(budget.year,budget.month,budget.id)">Modify</button> </td>
+                        </tr>
+                        <tr v-for="budget in budget_to_search" v-if="search_filter">
+                            <td> {{budget.id}} </td>
+                            <td> {{budget.username}} </td>
+                            <td> {{budget.day}}/{{budget.month}}/{{budget.year}} </td>
+                            <td> {{budget.description}} </td>
+                            <td> {{budget.category}} </td>
+                            <td> {{budget.total_cost}} </td>
+                            <td> {{budget.users}} </td>
+                            <td> {{budget.shares}} </td>
+                            <td> <button type="button" @click="getBudgetModify(budget.year,budget.month,budget.id);verified=true;verified2=true">Show</button> </td>
+                            <td> <button type="button" @click="removeBudget(budget.year,budget.month,budget.id)">Delete</button> </td>
+                            <td> <button type="button" @click.prevent="verified=true;id_old=budget.id;getBudgetModify(budget.year,budget.month,budget.id)">Modify</button> </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+                <div id="modifiy" v-if="verified">
+                    <div class="budget_modified">
+                            <table id="budgetlist">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Total Cost</th>
+                                    <th>Users</th>
+                                    <th>Shares</th>
+                                </tr>
+                                <tr v-for="budget_old in budget_to_modify">
+                                    <td> {{budget_old.id}} </td>
+                                    <td> {{budget_old.username}} </td>
+                                    <td> {{budget_old.day}}/{{budget_old.month}}/{{budget_old.year}} </td>
+                                    <td> {{budget_old.description}} </td>
+                                    <td> {{budget_old.category}} </td>
+                                    <td> {{budget_old.total_cost}} </td>
+                                    <td> {{budget_old.users}} </td>
+                                    <td> {{budget_old.shares}} </td>
+                                </tr>
+                            </table>
+                            <button type="button" v-if="verified2" @click.prevent="verified2=false;verified=false">Back</button>  
+                        
+                            <div class="budget_modified_form">
+                            <form id="budget_form" v-if="!verified2">
+                                <div class="form-group">
+                                    <label for="id">Id:</label>
+                                    <input type="number" name="id"  id="id" v-model="id" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="day">Day:</label>
+                                    <input type="number" name="day" id="day" v-model="day"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="month">Month:</label>
+                                    <input type="number" name="month" id="month" v-model="month"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year">Year:</label>
+                                    <input type="number" name="year" id="year" v-model="year"/>
+                                </div>     
+                                <div class="form-group">
+                                    <label for="description">Description:</label>
+                                    <input type="text" name="description" id="description" v-model="description"/>
+                                </div>      
+                                <div class="form-group">
+                                    <label for="category">Category:</label>
+                                    <input type="text" name="category" id="category" v-model="category"/>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="total_cost">Total Cost:</label>
+                                    <input type="number" name="total_cost" id="total_cost" v-model="total_cost"/>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="users">Users:</label>
+                                    <input type="text" name="users" id="users" v-model="users"/>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="shares">Shares:</label>
+                                    <input type="text" name="shares" id="shares" v-model="shares"/>
+                                </div> 
+
+                                <button type="button" @click.prevent="verified=false;verified2=false">Back</button>        
+                                <button type="button" @click="modifyBudget(id,day,month,year,description,category,total_cost,users,shares,id_old)">Modify</button>
+                    
+                            </form>
+                        </div>
+
+                       
+                    </div>
+                </div>
+            </div>
+
+            <div id="balance_app" v-if="balance_page"  class="reg_width">
+                <button type="button" @click="budget_page=true;balance_page=false;">Budget</button>
+                <button type="button" @click="whoami_page=true;balance_page=false;">Who am I</button>
+                <h1>BALANCE</h1>
+                <table id="balancelist" v-if="!selected_balance">
+                    <tr>
+                        <th>Username</th>
+                        <th>Give</th>
+                        <th>Take</th>
+                        <th>Balance</th>
+                    </tr>
+                    <tr v-for="balance in show_balance">
+                        <td> {{balance.user2}} </td>
+                        <td> {{balance.give}} </td>
+                        <td> {{balance.take}} </td>
+                        <td> {{balance.total}} </td>
+                        <td> <button type="button" @click="getSelectedBalance(balance.user2);selected_balance=true;">Show</button> </td>
+                    </tr>
+                </table>
+
+                <table id="balancelist" v-if="selected_balance">
+                    <tr>
+                        <th>Username</th>
+                        <th>Give</th>
+                        <th>Take</th>
+                        <th>Balance</th>
+                    </tr>
+                    <tr>
+                        <td> {{specific_balance.user2}} </td>
+                        <td> {{specific_balance.give}} </td>
+                        <td> {{specific_balance.take}} </td>
+                        <td> {{specific_balance.total}} </td>
+                    </tr>
+                </table>
+                <button type="button" v-if="selected_balance" @click="selected_balance=false;">Back</button>
+            </div>
+
+
+            <div id="whoami_app" v-if="whoami_page" class="reg_width">
+                <button type="button" @click="budget_page=true;whoami_page=false;">Budget</button>
+                <button type="button" @click="balance_page=true;whoami_page=false;">Balance</button>
+                <h1>WHO AM I</h1>
+                <table id="balancelist">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                    </tr>
+                    <tr>
+                        <td> {{whoami.id}} </td>
+                        <td> {{whoami.username}} </td>
+                        <td> {{whoami.password}} </td>
+                        <td> {{whoami.name}} </td>
+                        <td> {{whoami.surname}} </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+                <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bilancio familiare</title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="assets/js/budget_app.js" defer></script>
+
+           <!-- Bootstrap -->
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="assets/css/stile_login.css"/>
+    </head>
+    <body>
+        <div id="app">
+            <div class="container">
+                <button type="button" @click="insertData()">Upload starting data for the demo</button>
+            <div class="container_login">
+                <form id="login_form" action="/api/auth/signin" method="post">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username" />
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password"/>
+                    <input type="submit" value="Login"/>
+                </form>
+            </div>
+
+            <div class="container_login">
+                <form id="signup_form" action="/api/auth/signup" method="post">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username" />
+
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password"/>
+
+                    <label for="name">name:</label>
+                    <input type="text" name="name" id="name"/>
+
+                    <label for="surname">surname:</label>
+                    <input type="text" name="surname" id="surname"/>
+                    
+                    <input type="submit" value="signup"/>
+            </div>
+        </div>
+
+            </form>
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    </body>
+</html>

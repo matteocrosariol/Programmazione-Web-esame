@@ -1,0 +1,138 @@
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.budget_insert {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    margin-bottom: 50px;
+    margin-top: 20px;
+}
+.budget_modified {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+}
+
+.budget_insert_form {
+    width: 48%; 
+}
+
+.budget_modified_form {
+    width: 48%;
+    margin: 0 auto;
+}
+
+.user_list {
+    width: 48%; 
+}
+.budget_list {
+    width: 40%;
+}
+.reg_width {
+    width: 80%;
+}
+
+.form-group {
+    width: 100%;
+    justify-content: center;
+}
+
+
+#search_user {
+    margin-top: 20px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-around;
+}
+
+button {
+    padding: 10px;
+    margin: 10px;
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.label-group {
+    margin-bottom: 12px;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+input, select {
+    justify-content:center;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 2px solid #3498db;
+    border-radius: 6px;
+}
+
+input[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    line-height: 1;
+}
+
+th {
+    background-color: #3498db;
+    color: #fff;
+}
+
